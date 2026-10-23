@@ -1,0 +1,18 @@
+[
+  {
+    "id": "2025-asa-incident",
+    "title": "自宅k8s clusterインシデント 〜Claude Codeで思い出のPersistent Volumeを爆破してしまったはなし〜",
+    "url": "https://medium.com/eureka-engineering/asa-incident-93c14991691b",
+    "publishedAt": "2025-12-23",
+    "publisher": "Eureka Engineering (Medium)",
+    "summary": "AI コーディングエージェントに調査を頼んだら Argo CD プロジェクトごと PV を削除された話と、Longhorn の S3 バックアップなど再発防止策。"
+  },
+  {
+    "id": "2024-homelab-k8s",
+    "title": "2024年に自宅k8s clusterを始めて最高だったツール5選",
+    "url": "https://medium.com/eureka-engineering/2024-homelab-k8s-three-software-a000be1dbe73",
+    "publishedAt": "2024-12",
+    "publisher": "Eureka Engineering (Medium)",
+    "summary": "自宅オンプレ Kubernetes クラスタを立ち上げて役立ったツールの紹介。"
+  }
+]

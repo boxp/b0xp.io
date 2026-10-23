@@ -1,0 +1,25 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":timezone(Asia/Tokyo)",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "labels": ["dependencies"],
+  "rangeStrategy": "bump",
+  "packageRules": [
+    {
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchDepTypes": ["devDependencies"],
+      "automerge": true
+    },
+    {
+      "groupName": "astro",
+      "matchPackageNames": ["astro", "/^@astrojs//"]
+    },
+    {
+      "groupName": "tailwindcss",
+      "matchPackageNames": ["tailwindcss", "@tailwindcss/vite"]
+    }
+  ]
+}
