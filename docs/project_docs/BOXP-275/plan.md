@@ -18,6 +18,15 @@
 - 主要プロジェクトは Star 数ではなく最終 push 日を主キーに並べ、最終 push が 2 年以上前のものは「過去の取り組み」として折りたたむ。
 - 多言語対応は初期スコープ外（日本語ページ + 英語の一言紹介のみ）。
 
+## フェーズ分け（2026-10-23 本人承認）
+
+本人承認「一旦 stage 環境も別サブドメインで用意してそこで公開するまでは進めさせてほしい」に基づき、現フェーズは本番（b0xp.io / www.b0xp.io）を変更せず、独立した stage を実公開して確認するところまでとする。
+
+- stage: Cloudflare Pages プロジェクト `boxp-portfolio-stage`、カスタムドメイン `portfolio-stage.b0xp.io`（boxp/arch の `terraform/cloudflare/b0xp.io/portfolio/` で管理。既存の stage 命名 `hitohub-stage.b0xp.io` に揃えた。2026-10-23 時点で Terraform・実 DNS ともに未使用を確認）。
+- stage ビルドは `SITE_ENV=stage SITE_URL=https://portfolio-stage.b0xp.io`。`<meta name="robots" content="noindex, nofollow">`、robots.txt `Disallow: /`、画面上部に stage バナーを出す。noindex は検索エンジン向けの表示抑制であり秘密保護ではないため、未確認の経歴・メールアドレス・非公開原稿・LinkedIn エクスポート原本は stage にも載せない（経歴セクションは「準備中」表示）。
+- `main` push は stage へのみデプロイする。本番プロジェクト `boxp-portfolio` へのデプロイ・本番 DNS 切替・旧サイト / 旧 Pages プロジェクトの削除・shanghai-next の archive は未承認のため行わない。
+- Cloudflare API トークンは codex-workspace から取得できず、新規発行・権限拡大も未承認のため、初回 stage デプロイは boxp/arch の既存 Secrets を使う `deploy-portfolio-stage.yml`（workflow_dispatch）で行う。本リポジトリの Secrets には公開値の `CLOUDFLARE_ACCOUNT_ID` のみ設定済み。`CLOUDFLARE_API_TOKEN`（Pages: Edit）は本人に設定を依頼し、設定後は `main` push で自動デプロイされる（未設定時はスキップして notice）。
+
 ## Content Collections
 
 | collection | loader | 主なフィールド |
@@ -52,7 +61,7 @@ profile（名前・ハンドル・一言紹介・SNS リンク）は `src/conten
 1. [x] 新リポジトリ boxp/b0xp.io 作成、Astro + Tailwind 雛形、README / AGENTS.md / renovate.json / deploy.yml / Lighthouse CI
 2. [x] プロジェクト / 記事 / 登壇 / SNS リンクのコンテンツ実装、OGP / favicon / sitemap / robots.txt
 3. [ ] LinkedIn エクスポート提供後に experience / skills を転記し本人レビュー
-4. [ ] boxp/arch に Pages プロジェクト `boxp-portfolio` を追加（PR）、tfaction apply 後に新リポジトリへ Secrets（`CLOUDFLARE_API_TOKEN` / `CLOUDFLARE_ACCOUNT_ID`）を設定し `*.pages.dev` で初回デプロイ確認
+4. [ ] boxp/arch に Pages プロジェクト `boxp-portfolio`（本番、未使用）と `boxp-portfolio-stage` + `portfolio-stage.b0xp.io` を追加（PR #13821）、tfaction apply 後に arch の `deploy-portfolio-stage.yml` で stage へ初回デプロイし https://portfolio-stage.b0xp.io/ の表示・HTTPS・noindex を確認。`CLOUDFLARE_API_TOKEN` の本リポジトリへの設定は本人に依頼
 5. [ ] boxp/arch に DNS 切替 PR（`dns.tf` の CNAME を `cloudflare_pages_project.portfolio.subdomain` へ、`cloudflare_pages_domain` を b0xp.io / www.b0xp.io に追加）。旧 `shanghai` プロジェクトからカスタムドメインを外してから apply
 6. [ ] 後片付け: boxp/boxp プロフィール README のリンク確認、shanghai-next の archive または README 誘導、旧 Pages プロジェクト `shanghai` の削除可否
 
@@ -60,7 +69,8 @@ profile（名前・ハンドル・一言紹介・SNS リンク）は `src/conten
 
 - `npm run build`（`astro check` 0 errors / 0 warnings）
 - Lighthouse はローカルに Chromium が無いため PR の Lighthouse CI ジョブ（モバイル、3 回計測、Performance / Accessibility / SEO ≥ 0.9 をアサート）で確認する。PR #1 の初回計測（2026-10-23）は Performance / Accessibility / Best Practices / SEO すべて 100（3 回とも）
-- 切替前に `boxp-portfolio.pages.dev` で表示・OGP を確認する
+- stage ビルド（`npm run build:stage`）で robots.txt が `Disallow: /`、index.html に noindex メタと stage バナー、canonical / sitemap が `https://portfolio-stage.b0xp.io` になることをローカルで確認（2026-10-23）
+- 本番切替前に https://portfolio-stage.b0xp.io/ で表示・OGP を本人が確認する
 
 ## 未決事項（本人判断が必要）
 
@@ -68,3 +78,5 @@ profile（名前・ハンドル・一言紹介・SNS リンク）は `src/conten
 - メールアドレスを連絡先として載せるか（現状は SNS の DM 案内のみ）
 - shanghai-next を archive するか
 - Lunar レビュー記事の公開 URL（未公開なら掲載しない）
+- 本リポジトリ Secrets への `CLOUDFLARE_API_TOKEN`（Pages: Edit）設定（設定されるまでは boxp/arch の workflow_dispatch で stage デプロイ）
+- 本番切替（b0xp.io / www.b0xp.io の DNS・カスタムドメイン切替、本番プロジェクトへのデプロイ追加）の承認

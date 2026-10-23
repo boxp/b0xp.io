@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { isStage } from '../lib/site';
 
 interface Props {
   title: string;
@@ -18,6 +19,7 @@ const ogImage = new URL('/og.png', Astro.site);
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    {isStage && <meta name="robots" content="noindex, nofollow" />}
     <link rel="canonical" href={canonical} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="sitemap" href="/sitemap-index.xml" />
@@ -38,6 +40,11 @@ const ogImage = new URL('/og.png', Astro.site);
     <meta name="twitter:image" content={ogImage} />
   </head>
   <body class="min-h-screen bg-ink font-sans text-fg antialiased">
+    {isStage && (
+      <div role="status" class="border-b border-amber-400/40 bg-amber-400/10 px-5 py-2 text-center text-xs text-amber-200">
+        これは stage 環境（portfolio-stage.b0xp.io）です。内容は確認中で、本番の <a href="https://b0xp.io/" class="underline">b0xp.io</a> とは異なる場合があります。
+      </div>
+    )}
     <slot />
   </body>
 </html>

@@ -4,7 +4,9 @@ Keitaro Takeuchi (BOXP) のソフトウェアエンジニアとしてのポー�
 https://b0xp.io/
 
 - Astro + Tailwind CSS による静的サイト（クライアント JS なし）
-- Cloudflare Pages（プロジェクト `boxp-portfolio`）へ GitHub Actions から `wrangler pages deploy`
+- Cloudflare Pages へ GitHub Actions から `wrangler pages deploy`
+  - stage: プロジェクト `boxp-portfolio-stage` → https://portfolio-stage.b0xp.io/ （noindex。現フェーズのデプロイ先）
+  - 本番: プロジェクト `boxp-portfolio` → https://b0xp.io/ （本番切替フェーズで有効化。未切替）
 - DNS / Pages プロジェクトの定義は [boxp/arch](https://github.com/boxp/arch) の `terraform/cloudflare/b0xp.io/portfolio/` で管理
 
 ## 開発
@@ -12,7 +14,8 @@ https://b0xp.io/
 ```sh
 npm ci
 npm run dev      # http://localhost:4321
-npm run build    # astro check + astro build -> dist/
+npm run build    # astro check + astro build -> dist/（本番設定）
+npm run build:stage  # SITE_ENV=stage SITE_URL=https://portfolio-stage.b0xp.io でビルド（noindex + stage バナー）
 npm run preview
 npm run og       # public/og.png を再生成（profile.json の名前・ハンドルを反映）
 ```
@@ -42,9 +45,16 @@ Node 22.23.4 以上が必要です（`package.json` の `engines` 参照。Astro
 
 ## デプロイ
 
-- PR: ビルドと Lighthouse CI（モバイルで Performance / Accessibility / SEO 各 90 以上をアサート）のみ
-- `main` への push: ビルド後に `wrangler pages deploy dist --project-name boxp-portfolio`
-- 必要な Secrets: `CLOUDFLARE_API_TOKEN`（Pages: Edit 権限）, `CLOUDFLARE_ACCOUNT_ID`
+- PR: 本番設定でビルドし Lighthouse CI（モバイルで Performance / Accessibility / SEO 各 90 以上をアサート）のみ
+- `main` への push: `SITE_ENV=stage` でビルド後に `wrangler pages deploy dist --project-name boxp-portfolio-stage`（stage のみ。本番 `boxp-portfolio` へのデプロイは本番切替フェーズで追加する）
+- 必要な Secrets: `CLOUDFLARE_API_TOKEN`（Pages: Edit 権限）, `CLOUDFLARE_ACCOUNT_ID`。`CLOUDFLARE_API_TOKEN` が未設定の場合はデプロイをスキップして notice を出す。その間は [boxp/arch](https://github.com/boxp/arch) の `deploy-portfolio-stage.yml`（workflow_dispatch）から stage へデプロイできる。
+
+### ビルド時環境変数
+
+| 変数 | 既定 | 用途 |
+| --- | --- | --- |
+| `SITE_URL` | `https://b0xp.io` | canonical / OGP / sitemap / robots.txt の URL |
+| `SITE_ENV` | `production` | `stage` にすると `<meta name="robots" content="noindex, nofollow">`、robots.txt `Disallow: /`、画面上部の stage バナーが付く。検索エンジン向けの表示抑制であり、アクセス制限ではない |
 
 ## ライセンス
 

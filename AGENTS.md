@@ -8,7 +8,8 @@
 - コンテンツは `src/content/` の Content Collections（スキーマ: `src/content.config.ts`）。
 - ページは `src/pages/index.astro` の 1 ページ構成。セクション共通部品は `src/components/`。
 - OGP 画像は `npm run og` で `public/og.png` を生成する（`@resvg/resvg-js` + 同梱 Inter）。
-- デプロイは `.github/workflows/deploy.yml`。PR ではビルド + Lighthouse CI のみ、`main` push で Cloudflare Pages `boxp-portfolio` へデプロイ。
+- デプロイは `.github/workflows/deploy.yml`。PR ではビルド + Lighthouse CI のみ、`main` push で Cloudflare Pages の stage プロジェクト `boxp-portfolio-stage`（https://portfolio-stage.b0xp.io/）へデプロイ。本番 `boxp-portfolio` へのデプロイは本番切替フェーズで追加する。
+- `SITE_ENV=stage` / `SITE_URL` はビルド時環境変数（`astro.config.mjs` の `env.schema`、`src/lib/site.ts`）。stage では noindex メタ・robots.txt Disallow・stage バナーを出す。noindex はアクセス制限ではないので、stage にも未確認の経歴・メールアドレス・非公開原稿は載せない。
 - DNS / Pages プロジェクトは boxp/arch の Terraform（`terraform/cloudflare/b0xp.io/portfolio/`）で管理。ここでは触らない。
 
 ## 作業ルール
