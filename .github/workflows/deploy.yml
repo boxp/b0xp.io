@@ -41,7 +41,7 @@ jobs:
 
       # main への push 時のみデプロイする。PR ではビルドと Lighthouse のみ。
       - name: Deploy to Cloudflare Pages
-        if: github.event_name != 'pull_request'
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main'
         run: npx wrangler pages deploy dist --project-name boxp-portfolio --branch main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
