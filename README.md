@@ -17,7 +17,7 @@ npm run preview
 npm run og       # public/og.png を再生成（profile.json の名前・ハンドルを反映）
 ```
 
-Node 22 以上が必要です（`package.json` の `engines` 参照）。
+Node 22.23.4 以上が必要です（`package.json` の `engines` 参照。Astro 7 の要求バージョンに合わせています）。
 
 ## コンテンツの更新
 
