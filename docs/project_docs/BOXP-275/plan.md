@@ -59,7 +59,7 @@ profile（名前・ハンドル・一言紹介・SNS リンク）は `src/conten
 ## 検証
 
 - `npm run build`（`astro check` 0 errors / 0 warnings）
-- Lighthouse はローカルに Chromium が無いため PR の Lighthouse CI ジョブ（モバイル、3 回計測、Performance / Accessibility / SEO ≥ 0.9 をアサート）で確認する
+- Lighthouse はローカルに Chromium が無いため PR の Lighthouse CI ジョブ（モバイル、3 回計測、Performance / Accessibility / SEO ≥ 0.9 をアサート）で確認する。PR #1 の初回計測（2026-10-23）は Performance / Accessibility / Best Practices / SEO すべて 100（3 回とも）
 - 切替前に `boxp-portfolio.pages.dev` で表示・OGP を確認する
 
 ## 未決事項（本人判断が必要）
